@@ -25,6 +25,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/api/metrics", metricsRoutes);
+app.use(express.static("public"));
 // DB Connect
 connectDB();
 

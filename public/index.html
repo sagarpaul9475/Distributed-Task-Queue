@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Distributed Task Queue</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>Task Queue Dashboard</h1>
+
+<div class="card">
+  <h2>Submit Task</h2>
+
+  <button onclick="submitWorkflow('v1')">Run Workflow v1</button>
+  <button onclick="submitWorkflow('v2')">Run Workflow v2</button>
+
+  <br><br>
+
+  <input id="cmd" placeholder="Custom command">
+  <button onclick="submitCmd()">Run Command</button>
+</div>
+
+
+<div class="card">
+  <h2>Tasks</h2>
+  <button onclick="loadTasks()">Refresh</button>
+  <table id="taskTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Status</th>
+        <th>Attempts</th>
+        <th>Duration(ms)</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+
+<div class="card">
+  <h2>Metrics</h2>
+  <button onclick="loadMetrics()">Load Metrics</button>
+  <pre id="metrics"></pre>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
