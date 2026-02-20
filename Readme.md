@@ -275,6 +275,11 @@ In real systems, we would:
 
 # 👨‍💻 Team & Contributions
 
-Sagar Paul \
-Computer Science Engineer \
+* SAGAR PAUL -  Server Connect & Core Logic of WorkPool or task Queue.
+* SANJAY KUMAR PANDEY - client side rendering and handled connection of clinet and server.
+* SATYAM KUMAR - Routes of both metrics and task.
+* SHOBHIT BHARDWAJ - MongoDB and DB connnection ,DB Schema Making.
+* SAKSHAM SINGH- workflow of shell scrpits and schedular logic.
+
+Computer Science Engineers \
 Distributed Task Queue System
