@@ -121,34 +121,6 @@ if (task.payload.version) {
 
 
 
-
-// Worker loop
-async function workerLoop(id) {
-
-  console.log("Worker", id, "started");
-
-  setInterval(async () => {
-
-    const now = new Date();
-
-    const task = await Task.findOneAndUpdate(
-    {
-        status: "queued",
-        nextRunAt: { $lte: now }
-    },
-    { status: "running" },
-    { new: true }
-    );
-
-    if (task) {
-      console.log("Worker", id, "processing task", task._id);
-      await processTask(task);
-    }
-
-  }, 1000);
-}
-
-
 // Start pool
 function startWorkers() {
   for (let i = 0; i < MAX_WORKERS; i++) {
