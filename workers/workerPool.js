@@ -5,6 +5,7 @@ const MAX_WORKERS = 3;
 let activeWorkers = 0;
 
 //Execute one task and immediately pick the next one without waiting for the interval
+// This allows for faster processing while still respecting the worker limit
 async function runPool() {
 
   // Do not exceed worker limit
