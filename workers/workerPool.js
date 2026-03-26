@@ -26,7 +26,7 @@ async function runPool() {
 
   activeWorkers++;
 
-  console.log(`Pool picked task ${task._id}`);
+  console.log(`Pool picked task ${task._id}`);//Debugging
 
   processTask(task)
     .then(() => {
@@ -39,14 +39,91 @@ async function runPool() {
 }
 
 
-// Execute one task
+// Execute one task one at a time with retry logic and exponential backoff
+async function processTask(task) {
+
+  task.status = "running";
+  task.startedAt = new Date();
+  task.attempts += 1;
+
+  await task.save();
+  runPool(); // launch next task immediately
+
+  return new Promise((resolve) => {
+
+    // Example shell execution
+    const path = require("path");
+
+let command;
+
+if (task.payload.version) {
+
+    const workflowPath = path.join(
+        __dirname,
+        `../workflows/${task.payload.version}/sample.sh`
+    );
+
+    command = `bash "${workflowPath}"`;
+
+} else {
+    command = task.payload.cmd; // fallback
+}
+    exec(command, async (err, stdout, stderr) => {
+
+      if (err) {
+
+        if (task.attempts < task.maxAttempts) {
+
+            const baseDelay = Math.pow(2, task.attempts) * 1000;
+
+            const jitter = Math.random() * 1000;
+
+            const delay = baseDelay + jitter;
+
+            task.status = "queued";
+            task.nextRunAt = new Date(Date.now() + delay);
+
+            task.error = stderr;
+
+            console.log("Retry scheduled in", delay, "ms");
+
+        } else {
+
+            task.status = "failed";
+            task.error = stderr;
+
+        }
+
+    }
+ else {
+        task.status = "success";
+        task.result = stdout;
+      }
+
+      task.finishedAt = new Date();
+      task.durationMs = task.finishedAt - task.startedAt;
+
+      task.history.push({
+        attempt: task.attempts,
+        timestamp: new Date(),
+        status: task.status,
+        message: task.status === "success" ? stdout : stderr
+      });
+
+      await task.save();
+      resolve();
+    });
+
+  });
+}
+
 
 
 
 // Worker loop
 async function workerLoop(id) {
 
-  console.log("Worker", id, "started");
+  console.log("Worker", id, "started");//Debugging
 
   setInterval(async () => {
 
