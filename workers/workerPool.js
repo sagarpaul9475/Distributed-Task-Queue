@@ -84,9 +84,6 @@ if (task.payload.version) {
   });
 }
 
-
-
-
 // Worker loop
 async function workerLoop(id) {
 
