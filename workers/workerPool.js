@@ -5,41 +5,6 @@ const MAX_WORKERS = 3;
 let activeWorkers = 0;
 
 
-async function runPool() {
-
-  // Do not exceed worker limit
-  if (activeWorkers >= MAX_WORKERS) return;
-
-   const task = await Task.findOneAndUpdate(
-    {
-      status: "queued",
-      nextRunAt: { $lte: new Date() }
-    },
-    {
-      status: "running",
-      startedAt: new Date()
-    },
-    { new: true }
-  );
-
-  if (!task) return;
-
-  activeWorkers++;
-
-  console.log(`Pool picked task ${task._id}`);
-
-  processTask(task)
-    .then(() => {
-      activeWorkers--;
-      runPool(); // pick next task
-    })
-    .catch(() => {
-      activeWorkers--;
-    });
-}
-
-
-
 
 // Execute one task
 async function processTask(task) {
