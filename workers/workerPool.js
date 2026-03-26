@@ -41,6 +41,7 @@ async function runPool() {
 
 
 // Execute one task one at a time with retry logic and exponential backoff
+// This function is called by the worker loop and handles the execution of a single task, including updating its status, handling retries with exponential backoff, and saving results or errors.
 async function processTask(task) {
 
   task.status = "running";
