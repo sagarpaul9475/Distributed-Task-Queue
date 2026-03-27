@@ -150,5 +150,14 @@ async function workerLoop(id) {
 
 
 // Start pool
+function startWorkers() {
+  for (let i = 0; i < MAX_WORKERS; i++) {
+    workerLoop(i);
+  }
+}
 
+module.exports = {
+  runPool,
+  startWorkers
+};
 
